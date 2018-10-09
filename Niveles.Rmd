@@ -1,0 +1,48 @@
+---
+title: "Bases de Datos_Actividad 2"
+author: "kevin Flórez Ciro"
+date: "9 de octubre de 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Bases de datos de caso aplicado
+
+El desordn en los datos siguientes, se expresa por el no paradigma de los datos ordenados (ya que hay muchas variables indicando las mismas variables, lo que sucita un problemas para el análisis de datos).
+
+Para ellos, reduciremos las columnas (formato ancho), a un mayor número de filas (formato largo), esto para minimizar esfuerzos que pueden ser injuriosos y tal vez generar error o sesgos; además, para el análisis estadístico, se prefiere el formato largo, puesto que reduce el número de columnas aumentando sustancialmente la cantidad de filas.
+
+```{r}
+
+Niveles <- read.csv("Niveles_M_ximos_Absolutos_Mensuales.csv", encoding = "UTF-8")
+
+#Cambio de formato ancho a largo
+#Se emplean diferentes bibliotecas, una de ellas es "tidyr", empleando luego la función gather (no confundir con gather_ puesto que ésta hace otra cosa); una vez escrita la función, esta debe contener al menos 3 carácteristicas, que son, la base de datos, una llave (que será el agrupamiento de los datos o la columna reductora) y el valor (los datos propios de la llave); sin embarogo, toca también definir para cuales NO aplicar dichos argumentos, esto se hace sustralendo las columnas al final del argumento.
+
+library(tidyr)
+Niveles_acotados <- gather(data = Niveles, key = "Mes", value = "Valor", -c(Estación:Año))
+
+#Otra forma, más "programadora" para hacer dichas reducciones es:
+
+Niveles_acotados_2 <- Niveles %>% 
+  gather(key = "Mes", value = "Valor", -c(Estación:Año))
+
+
+
+#También, en ocaciones se necesita pasar de formato largo a formato ancho, esto se consigue de modo similar, pero con otra funcion, esta es "spread", y la conjunción es la misma, adicionalmente, hemos de organizar las variables catégoricas puesto que, R les reconoce como caracteres  a las entradas de los meses, y su orden es mostrado alfabéticmente
+
+Niveles_expandidos <- Niveles_acotados %>% 
+  spread(key = Mes, value = Valor)
+
+Niveles_expandidos_2 <- spread(data = Niveles_acotados_2, key = "Mes",
+                               value = "Valor")
+
+
+#Sirvase como precaria introducción a los reescalamientos en la estructura de los datos
+
+
+```
+
